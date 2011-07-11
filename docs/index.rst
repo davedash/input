@@ -14,6 +14,7 @@ Contents:
    installation
    sphinxsearch
    elasticsearch
+   themes
    l10n
 
 Indices and tables
