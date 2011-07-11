@@ -31,14 +31,6 @@ class ViewTestCase(test_utils.TestCase):
         r = self.client.get(reverse('myadmin.settings'))
         eq_(r.status_code, 200)
 
-    def test_recluster(self):
-        r = self.client.get(reverse('myadmin.recluster'))
-        eq_(r.status_code, 200)
-
-    def test_recluster_post(self):
-        r = self.client.post(reverse('myadmin.recluster'))
-        eq_(r.status_code, 302)
-
     def test_settings(self):
         r = self.client.get(reverse('myadmin.settings'))
         eq_(r.status_code, 200)
