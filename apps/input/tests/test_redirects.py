@@ -28,9 +28,9 @@ class RedirectTests(InputTestCase):
         Makes sure redirects only happen with a desktop browser too.
         """
         # Make sure the mobile site is defined in the test DB
-        mobile_site = Site.objects.create(pk=settings.MOBILE_SITE_ID,
-                        domain='m.input.mozillatest.com',
-                        name='m.input.mozillatest.com')
+        Site.objects.create(pk=settings.MOBILE_SITE_ID,
+                            domain='m.input.mozillatest.com',
+                            name='m.input.mozillatest.com')
 
         r = self.fxclient.get(reverse('search'))
         assert r.status_code in (200, 500)  # Sphinx will be down...
@@ -40,4 +40,3 @@ class RedirectTests(InputTestCase):
     def test_search(self):
         r = self.fxclient.get('/', follow=True)
         assert r.status_code != 404
-

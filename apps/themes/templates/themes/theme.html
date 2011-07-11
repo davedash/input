@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block page_title -%}
-{{ theme.pivot.description }} :: {{ _('Theme') }}
+{{ theme.text }} :: {{ _('Theme') }}
 {%- endblock %}
 
 {% block content %}
@@ -17,7 +17,7 @@
     <h2>{{ _('Theme') }}</h2>
 
     <div id="theme-callout">
-      {{ theme.pivot.description }}
+      {{ theme.text }}
     </div>
 
     {{ message_list(opinions, show_notfound=False) }}

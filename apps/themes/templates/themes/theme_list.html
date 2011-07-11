@@ -1,7 +1,7 @@
 {% if themes %}
   <ul class="messages">
     {% for theme in themes %}
-    {% with opinion=theme.pivot %}
+    {% with opinion=theme.opinions[0] %}
     <li class="message theme"
         data-platform="{{ theme.platform or 'aggregate' }}">
       {% if opinion|is_praise  %}
@@ -11,24 +11,30 @@
       {% else %}
         <p class="type issue" title="{{ _('Issue') }}"><span>{{ _('Issue') }}</span></p>
       {% endif %}
-        <p class="body primary"><a href="{{ theme.get_absolute_url() }}" title="{{ _('See all opinions') }}"><span>{{ opinion.description }}</span>
+        <p class="body primary">
+          <a href="{{ theme.get_absolute_url() }}"
+             title="{{ _('See all opinions') }}">
+             <span>{{ theme.text }}</span>
         <span class="more">
-          {% trans num=(theme.num_opinions-1), count=(theme.num_opinions-1)|numberfmt %}
+          {% trans num=(theme.total), count=(theme.total)|numberfmt %}
             {{ count }} similar message
           {% pluralize %}
             {{ count }} similar messages
           {% endtrans %}
         </span></a></p>
         <ul class="samples">
-          {% for item in theme.items.select_related(depth=1)[:5] %}
-          <li>{{ item.opinion.description }}</li>
+          {% for item in theme.opinions %}
+          <li>{{ item.description }}</li>
           {% endfor %}
         </ul>
         <div class="options">
           <a href="#"><span>{{ _('More Options') }}</span></a>
           <ul>
             {# L10n: Link to Google Translator #}
-            <li><a href="{{ 'http://translate.google.com/'|urlparams(sl='auto', q=opinion.description) }}">{{ _('Translate Message') }}</a></li>
+            <li>
+              <a href="{{ 'http://translate.google.com/'|urlparams(sl='auto',
+                q=theme.text) }}">
+                {{ _('Translate Message') }}</a></li>
           </ul>
         </div>
         </li>
