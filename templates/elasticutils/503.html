@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{% block page_title %}{{ _('Try Again Later') }}{% endblock %}</h2>
+
+<p>{{ msg }}</p>
+{% if settings.DEBUG %}
+<p>This was the real issue, web developer -- {{ error }}</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,5 @@
+gateway:
+    type: local
+
+cluster:
+    name: input
