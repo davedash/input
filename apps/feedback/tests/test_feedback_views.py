@@ -5,14 +5,15 @@ from django.conf import settings
 from nose.tools import eq_
 from pyquery import PyQuery as pq
 
-from input import FIREFOX, OPINION_PRAISE, OPINION_ISSUE
+import input
+from input import OPINION_PRAISE, OPINION_ISSUE
 from input.tests import ViewTestCase, enforce_ua
 from input.urlresolvers import reverse
 from feedback.models import Opinion
 
 
-class BetaViewTests(ViewTestCase):
-    """Tests for our beta feedback submissions."""
+class ViewTest(ViewTestCase):
+    """Tests for our feedback submissions."""
 
     fixtures = ['feedback/opinions']
     FX_UA = ('Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; '
@@ -33,8 +34,7 @@ class BetaViewTests(ViewTestCase):
 
     @enforce_ua
     def test_release(self):
-        version = (getattr(FIREFOX, 'default_version', None) or
-                    Version(LATEST_BETAS[FIREFOX]).simplified)
+        version = input.FIREFOX.default_version
         r = self._get_page(version)
         eq_(r.status_code, 200)
 
@@ -136,9 +136,8 @@ class BetaViewTests(ViewTestCase):
             for form in forms:
                 eq_(pq(form).attr('autocomplete'), 'off')
 
-        with_site(settings.DESKTOP_SITE_ID)        
+        with_site(settings.DESKTOP_SITE_ID)
         with_site(settings.MOBILE_SITE_ID)
-
 
     def test_submission_with_device_info(self):
         """Ensure mobile device info can be submitted."""
