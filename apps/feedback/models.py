@@ -10,11 +10,14 @@ from elasticutils import es_required
 from pyes import djangoutils
 from pyes.exceptions import NotFoundException as PyesNotFoundException
 
+import input
 from feedback import query, utils
-from feedback.utils import ua_parse, extract_terms, smart_truncate
-from input import PRODUCT_IDS, OPINION_TYPES, OPINION_PRAISE, PLATFORMS
+from feedback.utils import ua_parse, smart_truncate
+from grouperfish import GF
+from input import OPINION_TYPES, OPINION_PRAISE, PLATFORMS
 from input.models import ModelBase
 from input.urlresolvers import reverse
+from themes.utils import cluster_key
 
 log = commonware.log.getLogger('feedback')
 
@@ -87,7 +90,7 @@ class Opinion(ModelBase):
     @property
     def product_name(self):
         try:
-            return PRODUCT_IDS[self.product].pretty
+            return input.PRODUCT_IDS[self.product].pretty
         except KeyError:
             return self.product
 
@@ -131,6 +134,19 @@ class Opinion(ModelBase):
         else:
             log.debug('Opinion %d removed from search index.' % self.id)
 
+    def post_to_grouperfish(self, connection=None):
+
+        key = cluster_key(input.PRODUCT_IDS[self.product], self.version,
+                          self.platform, self.type)
+        key_all = cluster_key(input.PRODUCT_IDS[self.product], self.version,
+                              'all', self.type)
+        gf = connection or GF(settings.GF_HOST, settings.GF_NAMESPACE)
+        bulk = bool(connection)
+
+        # We want to index both platform specifically and as an aggregate.
+        for k in (key, key_all):
+            gf.index(k, id=self.id, text=self.description, bulk=bulk)
+
 
 def parse_user_agent(sender, instance, **kw):
     parsed = ua_parse(instance.user_agent)
@@ -150,10 +166,17 @@ def extract_terms(sender, instance, **kw):
         this_term, created = Term.objects.get_or_create(term=term)
         instance.terms.add(this_term)
 
+
 def post_to_elastic(sender, instance, **kw):
     """Asynchronously update the opinion in ElasticSearch."""
     from search import tasks
     tasks.add_to_index.delay([instance.id])
+
+
+def post_to_grouperfish(sender, instance, **kw):
+    from themes import cron
+    cron._grouperfish_index.delay([instance.id])
+
 
 signals.pre_save.connect(parse_user_agent, sender=Opinion)
 signals.post_save.connect(extract_terms, sender=Opinion,
@@ -164,6 +187,8 @@ unindex_opinion = lambda instance, **kwargs: instance.remove_from_index()
 signals.post_delete.connect(unindex_opinion, sender=Opinion)
 
 # post_Save for POST to metrics
+signals.post_save.connect(post_to_grouperfish, sender=Opinion)
+
 
 class TermManager(models.Manager):
     def get_query_set(self):
