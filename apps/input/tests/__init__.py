@@ -7,6 +7,7 @@ from django.test.client import Client
 import jingo
 import test_utils
 
+import input
 from input import urlresolvers
 
 
@@ -40,7 +41,8 @@ class InputTestCase(test_utils.TestCase):
 
     def setUp(self):
         super(InputTestCase, self).setUp()
-        self.fxclient = Client(False, HTTP_USER_AGENT=(FX_UA % '4.0'))
+        latest = input.LATEST_RELEASE[input.FIREFOX]
+        self.fxclient = Client(False, HTTP_USER_AGENT=(FX_UA % latest))
         self.mclient = Client(False, HTTP_USER_AGENT=FENNEC_UA)
         self.factory = test_utils.RequestFactory()
 
