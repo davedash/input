@@ -39,7 +39,7 @@ class MiddlewareTests(InputTestCase):
     def test_mobilesite_nohost(self):
         """Make sure we serve the desktop site if there's no HTTP_HOST set."""
         # This won't contain HTTP_HOST. Must not fail.
-        self.client.get('/')
+        self.client.get('/', follow=True)
         eq_(settings.SITE_ID, settings.DESKTOP_SITE_ID)
 
     @patch('django.contrib.sites.models.Site.objects.get')
@@ -48,12 +48,13 @@ class MiddlewareTests(InputTestCase):
         def side_effect(*args, **kwargs):
             class FakeSite(object):
                 id = settings.MOBILE_SITE_ID
+                domain = ''
             return FakeSite()
         mock.side_effect = side_effect
 
         # Get the front page. Since we mocked the Site model, the URL we
         # pass here does not matter.
-        self.client.get('/', HTTP_HOST='m.example.com')
+        r = self.client.get('/', HTTP_HOST='m.example.com', follow=True)
         eq_(settings.SITE_ID, settings.MOBILE_SITE_ID)
 
     def test_redirect_with_querystring(self):

@@ -76,7 +76,7 @@ def populate(num_opinions=None, product='mobile', type=None, locale=None):
             type = random.choice(TYPES).id
         o = Opinion(_type=type,
                     url=random.choice(URLS),
-                    locale=locale or random.choice(settings.INPUT_LANGUAGES),
+                    locale=locale or random.choice(settings.PROD_LANGUAGES),
                     user_agent=random.choice(UA_STRINGS[product]))
 
         o.description = sample()

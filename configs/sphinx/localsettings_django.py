@@ -1,12 +1,15 @@
 import os
 import sys
+import site
 
 SETTINGS_DIR = os.path.realpath(
         os.path.join(os.path.dirname(__file__), os.path.sep.join(('..',) * 2)))
 
 sys.path.append(SETTINGS_DIR)
-
-from manage import settings
+site.addsitedir(SETTINGS_DIR + '/vendor')
+from funfactory import manage
+manage.ROOT = SETTINGS_DIR
+import settings_local as settings
 
 s = settings.DATABASES['default']
 MYSQL_PASS = s['PASSWORD']
