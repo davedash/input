@@ -11,7 +11,7 @@ from input.urlresolvers import reverse
 from feedback.models import Opinion
 
 
-class BetaViewTests(ViewTestCase):
+class ViewTests(ViewTestCase):
     """Tests for our beta feedback submissions."""
 
     fixtures = ['feedback/opinions']

@@ -70,7 +70,6 @@ MINIFY_BUNDLES = {
             'css/mobile.css',
         ),
 
-        # Feedback for Firefox release versions
         'feedback': (
             'css/libs/reset2.css',
             'css/feedback.css',
