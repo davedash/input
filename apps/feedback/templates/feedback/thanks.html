@@ -33,11 +33,12 @@
       </div>
     {% endif %}
 
-    <div>
-      <h3>{{ _('Have more to say?') }}</h3>
+    <div id="thanks_download">
+      <h3>{{ _('Shape the future of Firefox.') }}</h3>
       <p>
-        {% trans fb_url='/feedback' %}
-        Feel free to <a href="{{ fb_url }}">submit more feedback</a>
+        {% trans download_url="http://www.mozilla.org/firefox/channel" %}
+          Download
+          <a href="{{ download_url }}">the build that is right for you</a>.
         {% endtrans %}
       </p>
     </div>
@@ -69,7 +70,7 @@
       </ul>
     </div>
   </div>
-  
+
   <span class="fade"></span>
 </article>
 

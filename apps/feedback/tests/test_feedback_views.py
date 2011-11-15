@@ -172,9 +172,23 @@ class ViewTests(ViewTestCase):
 
     def test_mobile_sumo_url(self):
         """Test the sumo url in the mobile version."""
-        r = self.client.get(reverse('feedback'), 
-                            HTTP_USER_AGENT=(self.FX_UA % '20.0b2'), 
+        r = self.client.get(reverse('feedback'),
+                            HTTP_USER_AGENT=(self.FX_UA % '20.0b2'),
                             SITE_ID=settings.MOBILE_SITE_ID)
         doc = pq(r.content)
         sumo_url = doc('#sumo-url')
         eq_(sumo_url.attr('href'), 'http://support.mozilla.com/en-US/')
+
+    def test_thanks(self):
+        # test link to android market
+        r = self.client.get(reverse('thanks'), SITE_ID=settings.MOBILE_SITE_ID)
+        doc = pq(r.content)
+        eq_(doc('#thanks-download a').attr('href'),
+            'https://market.android.com/details?id=org.mozilla.firefox_beta')
+
+        # test link to channels page
+        r = self.client.get(reverse('thanks'))
+        doc = pq(r.content)
+        eq_(doc('#thanks_download a').attr('href'),
+            'http://www.mozilla.org/firefox/channel')
+

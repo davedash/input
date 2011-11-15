@@ -13,7 +13,7 @@ body {
 a {
     color: #437bc4;
     text-decoration: none;
-}	
+}
 
 section {
     position: relative;
@@ -342,6 +342,7 @@ footer p {
 #thanks #thanks-twitter:before { background-position: 0 -100px; }
 #thanks #thanks-facebook:before { background-position: 0 -150px; }
 #thanks #thanks-planet:before { background-position: 0 -200px; }
+#thanks #thanks-download:before { background-position: 0 -250px; }
 
 .errorlist {
     color: red;

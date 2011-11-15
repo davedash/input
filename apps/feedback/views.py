@@ -76,7 +76,7 @@ def feedback(request, ua):
             request.session['previous_opinion'] = save_opinion_from_form(
                                                     request, typ, ua, form)
 
-            url = reverse('feedback.thanks')
+            url = reverse('thanks')
             return http.HttpResponseRedirect(url)
         else:
             forms = {'happy': (form if typ == input.OPINION_PRAISE.id else
