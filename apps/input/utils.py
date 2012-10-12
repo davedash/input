@@ -1,7 +1,7 @@
 import zlib
 
 
-# TODO(davedash): liberate this
+# TODO: liberate this
 def manual_order(qs, pks, pk_name='id'):
     """
     Given a query set and a list of primary keys, return a set of objects from
